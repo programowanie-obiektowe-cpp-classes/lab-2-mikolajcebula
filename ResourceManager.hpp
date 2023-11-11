@@ -25,7 +25,7 @@ class ResourceManager
     ResourceManager(ResourceManager&& rm) noexcept
     {
         // cout << "konstruktor przenoszący"<< endl;
-        resource = new Resource(move(*rm.resource));
+        resource = new Resource(std::move(*rm.resource));
     }
     ResourceManager& operator=(const ResourceManager& rm)
     {
@@ -45,7 +45,7 @@ class ResourceManager
             return *this;
         }
 
-        resource = new Resource(move(*rm.resource));
+        resource = new Resource(std::move(*rm.resource));
     }
     ~ResourceManager()
     {
