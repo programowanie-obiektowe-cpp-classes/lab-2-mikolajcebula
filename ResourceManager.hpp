@@ -5,55 +5,50 @@
 class ResourceManager
 {
     private:
-    Resource* resource;  // wskaźnik do zarządzanego zasobu
+        Resource* resource;  // wskaźnik do zarządzanego zasobu
+    public:
+        // konstruktor domyślny
+        ResourceManager() : resource(new Resource()) {}
 
-public:
-    // konstruktor domyślny
-    ResourceManager() : resource(new Resource()) {}
-
-    // konstruktor kopiujący
-    ResourceManager(const ResourceManager& other) : resource(new Resource(*(other.resource))) {
-        ++copies;
-        ++live;
-    }
-
-    // operator przypisania
-    ResourceManager& operator=(const ResourceManager& other) {
-        if (this != &other) {
-            delete resource;  // zwalniamy obecny zasób
-            resource = new Resource(*(other.resource));  // alokujemy i kopiujemy nowy zasób
-            ++cp_asgn;
+        double get()
+        {
+            return resource -> get();
         }
-        return *this;
+
+    ResourceManager(const ResourceManager& rm)
+    {
+        cout << "konstruktor kopiujacy"<< endl;
+        resource = new Resource(*rm.resource);
     }
 
     // konstruktor przenoszący
-    ResourceManager(ResourceManager&& other) noexcept : resource(other.resource) {
-        other.resource = nullptr;  // zapobiegamy zwolnieniu tego samego zasobu przez obiekt źródłowy
-        ++moves;
-        ++live;
+    ResourceManager(ResourceManager&& rm) noexcept
+    {
+        cout << "konstruktor przenoszący"<< endl;
+        resource = new Resource(move(*rm.resource));
     }
-
-    // operator przypisania przenoszący
-    ResourceManager& operator=(ResourceManager&& other) noexcept {
-        if (this != &other) {
-            delete resource;  // zwalniamy obecny zasób
-            resource = other.resource;  // przenosimy zasób
-            other.resource = nullptr;  // zapobiegamy zwolnieniu tego samego zasobu przez obiekt źródłowy
-            ++mv_asgn;
+    ResourceManager& operator=(const ResourceManager& rm)
+    {
+        cout << "operator przypisania"<< endl;
+        if (this == &rm) {
+            return *this;
         }
+        delete resource;
+        resource = new Resource(*rm.resource);
         return *this;
     }
 
-    // destruktor
-    ~ResourceManager() {
-        delete resource;  // zwalniamy zarządzany zasób
-        ++destr;
-        --live;
-    }
+    ResourceManager& operator=(ResourceManager&& rm) noexcept
+    {
+        cout << "przenoszący operator przypisania"<< endl;
+        if (this == &rm) {
+            return *this;
+        }
 
-    double get() const {
-        // metoda zwracająca wynik zasobu
-        return resource->get();
+        resource = new Resource(move(*rm.resource));
+    }
+    ~ResourceManager()
+    {
+        delete resource;
     }
 };
