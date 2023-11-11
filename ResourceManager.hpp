@@ -17,19 +17,19 @@ class ResourceManager
 
     ResourceManager(const ResourceManager& rm)
     {
-        cout << "konstruktor kopiujacy"<< endl;
+        // cout << "konstruktor kopiujacy"<< endl;
         resource = new Resource(*rm.resource);
     }
 
     // konstruktor przenoszący
     ResourceManager(ResourceManager&& rm) noexcept
     {
-        cout << "konstruktor przenoszący"<< endl;
+        // cout << "konstruktor przenoszący"<< endl;
         resource = new Resource(move(*rm.resource));
     }
     ResourceManager& operator=(const ResourceManager& rm)
     {
-        cout << "operator przypisania"<< endl;
+        //  cout << "operator przypisania"<< endl;
         if (this == &rm) {
             return *this;
         }
@@ -40,7 +40,7 @@ class ResourceManager
 
     ResourceManager& operator=(ResourceManager&& rm) noexcept
     {
-        cout << "przenoszący operator przypisania"<< endl;
+         // cout << "przenoszący operator przypisania"<< endl;
         if (this == &rm) {
             return *this;
         }
